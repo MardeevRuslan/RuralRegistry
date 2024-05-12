@@ -37,8 +37,12 @@
 
 ### Docker
 1. Соберите Docker образ и запустите контейнер с помощью Docker Compose:
+2. Проверьте что контейнеры запущены:
+   ![Контейнеры](images/docker.png)
 
-    ```bash
-    make run_docker
-    ```
 
+## Проверка работоспособности
+Перейдите по ссылке [тут](http://localhost:8080/swagger-ui/index.html)
+
+Должны получить страницу с документацией в виде страницы swagger:
+![swagger](images/swagger.png)
