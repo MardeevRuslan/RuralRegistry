@@ -3,6 +3,7 @@ package ru.respak.mardeev.service;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.respak.mardeev.dto.FarmerOrganizationDto;
 import ru.respak.mardeev.entity.Area;
 import ru.respak.mardeev.entity.FarmerOrganization;
 import ru.respak.mardeev.repository.AreaRepository;
@@ -50,7 +51,11 @@ public class FarmerOrganizationServiceImpl implements FarmerOrganizationService 
 
     @Override
     public FarmerOrganization getFarmerByOrganizationArea(Long areaId) {
-        return farmerOrganizationRepository.findByAreaId(areaId).orElse(null);
+        Area area = areaRepository.findById(areaId).orElse(null);
+        if (area == null) {
+            throw new IllegalArgumentException("Area not found");
+        }
+        return farmerOrganizationRepository.findByRegistrationArea(area).orElse(null);
     }
 
     @Override
@@ -59,10 +64,18 @@ public class FarmerOrganizationServiceImpl implements FarmerOrganizationService 
     }
 
     @Override
-    public FarmerOrganization addFarmer(FarmerOrganization farmer) {
-        if (areaRepository.findById(farmer.getAreaId()).orElse(null) == null) {
+    public FarmerOrganization addFarmer(FarmerOrganizationDto farmerDto) {
+        if (areaRepository.findById(farmerDto.getAreaId()).orElse(null) == null) {
             throw new IllegalArgumentException("Area not found");
         }
+        FarmerOrganization farmer = new FarmerOrganization();
+        farmer.setOrganizationName(farmerDto.getOrganizationName());
+        farmer.setINN(farmerDto.getINN());
+        farmer.setKPP(farmerDto.getKPP());
+        farmer.setOGRN(farmerDto.getOGRN());
+        farmer.setRegistrationArea(areaRepository.findById(farmerDto.getAreaId()).orElse(null));
+        farmer.setRegistrationDate(farmerDto.getRegistrationDate());
+        farmer.setArchive(false);
         return farmerOrganizationRepository.save(farmer);
     }
 
@@ -113,7 +126,7 @@ public class FarmerOrganizationServiceImpl implements FarmerOrganizationService 
         if (farmerOrganization == null || area == null) {
             throw new IllegalArgumentException("Farmer or area not found");
         }
-        farmerOrganization.setAreaId(newArea);
+        farmerOrganization.setRegistrationArea(area);
         return farmerOrganizationRepository.save(farmerOrganization);
     }
 
@@ -125,5 +138,19 @@ public class FarmerOrganizationServiceImpl implements FarmerOrganizationService 
         }
         farmerOrganization.setArchive(true);
         farmerOrganizationRepository.save(farmerOrganization);
+    }
+
+    @Override
+    public FarmerOrganization addCultivationAreas(Long id, Long areaIds) {
+        FarmerOrganization farmerOrganization = farmerOrganizationRepository.findById(id).orElse(null);
+        if (farmerOrganization == null) {
+            throw new IllegalArgumentException("Farmer not found");
+        }
+        Area area = areaRepository.findById(areaIds).orElse(null);
+        if (area == null) {
+            throw new IllegalArgumentException("Area not found");
+        }
+        farmerOrganization.getCultivationAreas().add(area);
+        return farmerOrganizationRepository.save(farmerOrganization);
     }
 }

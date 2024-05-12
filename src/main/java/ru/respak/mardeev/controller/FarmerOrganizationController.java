@@ -3,6 +3,7 @@ package ru.respak.mardeev.controller;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.respak.mardeev.dto.FarmerOrganizationDto;
 import ru.respak.mardeev.entity.FarmerOrganization;
 import ru.respak.mardeev.service.FarmerOrganizationService;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @Data
-@RequestMapping("/farmers")
+@RequestMapping("/api/farmers")
 public class FarmerOrganizationController {
     private  final FarmerOrganizationService farmerOrganizationService;
 
@@ -25,33 +26,37 @@ public class FarmerOrganizationController {
         return farmerOrganizationService.getAllFarmers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/byId/{id}")
     public FarmerOrganization getFarmerById(@PathVariable Long id) {
         return farmerOrganizationService.getFarmerById(id);
     }
 
-    @GetMapping("/{organizationName}")
-    public FarmerOrganization getFarmerById(@PathVariable String organizationName) {
+    @PutMapping("/addCultivationAreas/{id}")
+    public FarmerOrganization addCultivationAreas(@PathVariable Long id, @RequestBody Long areaIds) {
+        return farmerOrganizationService.addCultivationAreas(id, areaIds);
+    }
+    @GetMapping("/byName/{organizationName}")
+    public FarmerOrganization getFarmerByOrganizationName(@PathVariable String organizationName) {
         return farmerOrganizationService.getFarmerByOrganizationName(organizationName);
     }
 
-    @GetMapping("/{INN}")
+    @GetMapping("/byINN/{INN}")
     public FarmerOrganization getFarmerByINN(@PathVariable Long INN) {
         return farmerOrganizationService.getFarmerByOrganizationINN(INN);
     }
 
-    @GetMapping("/{areaId}")
+    @GetMapping("/byAreaId/{areaId}")
     public FarmerOrganization getFarmerByAreaId(@PathVariable Long areaId) {
         return farmerOrganizationService.getFarmerByOrganizationArea(areaId);
     }
 
-    @GetMapping("/{registrationDate}")
+    @GetMapping("/byRegistrationDate/{registrationDate}")
     public FarmerOrganization getFarmerByRegistrationDate(@PathVariable Date registrationDate) {
         return farmerOrganizationService.getFarmerByRegistrationDate(registrationDate);
     }
-    @PostMapping
-    public FarmerOrganization addFarmer(@RequestBody FarmerOrganization farmer) {
-        return farmerOrganizationService.addFarmer(farmer);
+    @PostMapping("/add")
+    public FarmerOrganization addFarmer(@RequestBody FarmerOrganizationDto farmerDto) {
+        return farmerOrganizationService.addFarmer(farmerDto);
     }
 
     @PutMapping("/{id}/updateName")

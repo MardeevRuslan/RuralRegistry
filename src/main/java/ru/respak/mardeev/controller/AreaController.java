@@ -3,6 +3,8 @@ package ru.respak.mardeev.controller;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.respak.mardeev.dto.AreaNameAndCodeDto;
+import ru.respak.mardeev.dto.AreaNameDto;
 import ru.respak.mardeev.entity.Area;
 import ru.respak.mardeev.service.AreaService;
 
@@ -41,8 +43,12 @@ public class AreaController {
 
 
     @PostMapping("/add")
-    public Area addArea(@RequestBody Area area) {
+    public Area addArea(@RequestBody AreaNameAndCodeDto area) {
         return areaService.addArea(area);
+    }
+    @PostMapping("/addByName")
+    public Area addArea(@RequestBody AreaNameDto area) {
+        return areaService.addAreaByName(area);
     }
 
     @PutMapping("/{areaId}/updateName")

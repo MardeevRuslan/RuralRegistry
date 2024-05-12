@@ -1,5 +1,6 @@
 package ru.respak.mardeev.service;
 
+import ru.respak.mardeev.dto.FarmerOrganizationDto;
 import ru.respak.mardeev.entity.FarmerOrganization;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ public interface FarmerOrganizationService {
 
     FarmerOrganization getFarmerByRegistrationDate(Date registrationDate);
 
-    FarmerOrganization addFarmer(FarmerOrganization farmer);
+    FarmerOrganization addFarmer(FarmerOrganizationDto farmerDto);
 
     FarmerOrganization updateFarmerByOrganizationName(long id, String newFarmerName);
 
@@ -32,4 +33,6 @@ public interface FarmerOrganizationService {
     FarmerOrganization updateFarmerByArea(long id, Long newArea);
 
     void archiveFarmer(long id);
+
+    FarmerOrganization addCultivationAreas(Long id, Long areaIds);
 }

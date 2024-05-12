@@ -3,9 +3,12 @@ package ru.respak.mardeev.service;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.respak.mardeev.dto.AreaNameAndCodeDto;
+import ru.respak.mardeev.dto.AreaNameDto;
 import ru.respak.mardeev.entity.Area;
 import ru.respak.mardeev.repository.AreaRepository;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,8 +51,8 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public Area addArea(Area area) {
-        return areaRepository.save(area);
+    public Area addArea(AreaNameAndCodeDto area) {
+        return areaRepository.save(new Area(area.getAreaName(), area.getAreaCode()));
     }
 
     @Override
@@ -87,5 +90,8 @@ public class AreaServiceImpl implements AreaService {
         }
     }
 
-
+    @Override
+    public Area addAreaByName(AreaNameDto area) {
+        return areaRepository.save(new Area(area.getAreaName()));
+    }
 }

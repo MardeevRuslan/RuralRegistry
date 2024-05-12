@@ -1,14 +1,20 @@
 package ru.respak.mardeev.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.respak.mardeev.helpers.OrganizationalLegalForm;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "farmer_organization_table")
 public class FarmerOrganization {
 
@@ -27,21 +33,19 @@ public class FarmerOrganization {
     @Column(name = "OGRN")
     private long OGRN;
 
-//    @OneToOne(targetEntity = Area.class)
-//    @JoinColumn(name = "area_id")
-//    private Area areaRegistration;
-//    @OneToMany(targetEntity = Area.class)
-//    @JoinColumn(name = "area_id")
-//    private List<Area> cropsFieldsAreas;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "registration_area_id")
+    private Area registrationArea;
 
-    @Column(name = "area_id", nullable = false) // Добавляем внешний ключ
-    private long areaId; // Идентификатор области, ссылается на area_id в таблице area_table
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "area_id", insertable = false, updatable = false)
-    private Area area; // Добавляем объект Area для доступа к связанной области
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "farmer_organization_area",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "area_id"))
+    private List<Area> cultivationAreas = new ArrayList<>();
 
     @Column(name = "registration_date")
     private Date registrationDate;
     @Column(name = "is_archive")
-    private boolean isArchive;
+    private boolean isArchive = false;
+
 }

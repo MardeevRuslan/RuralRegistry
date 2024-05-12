@@ -2,6 +2,7 @@ package ru.respak.mardeev.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.respak.mardeev.entity.Area;
 import ru.respak.mardeev.entity.FarmerOrganization;
 
 import java.util.Date;
@@ -13,7 +14,9 @@ public interface FarmerOrganizationRepository extends JpaRepository<FarmerOrgani
 
     Optional<FarmerOrganization> findByINN(Long inn);
 
-    Optional<FarmerOrganization> findByAreaId(Long areaId);
+
 
     Optional<FarmerOrganization> findByRegistrationDate(Date registrationDate);
+
+    Optional<FarmerOrganization> findByRegistrationArea(Area area);
 }
