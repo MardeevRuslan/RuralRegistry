@@ -8,6 +8,7 @@ import ru.respak.mardeev.repository.AreaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -20,22 +21,30 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public List<Area> getAllAreas() {
-        return areaRepository.findAll();
+        return areaRepository.findAll().stream()
+                .filter(area -> !area.isArchive())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Area> getAreas(String name, Long code) {
-        return areaRepository.findByAreaNameAndAreaCode(name, code);
+        return areaRepository.findByAreaNameAndAreaCode(name, code).stream()
+                .filter(area -> !area.isArchive())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Area> getAreas(String name) {
-        return areaRepository.findByAreaName(name);
+        return areaRepository.findByAreaName(name).stream()
+                .filter(area -> !area.isArchive())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Area> getAreas(Long code) {
-        return areaRepository.findByAreaCode(code);
+        return areaRepository.findByAreaCode(code).stream()
+                .filter(area -> !area.isArchive())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -44,20 +53,31 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public Area updateArea(String areaName, long areaCode, Area area) {
-        Optional<Area> optionalArea = areaRepository.findById(area.getId());
+    public Area updateArea(Long areaId, String newAreaName) {
+        Optional<Area> optionalArea = areaRepository.findById(areaId);
         if (optionalArea.isPresent()) {
             Area existingArea = optionalArea.get();
-            existingArea.setAreaName(areaName);
-            existingArea.setAreaCode(areaCode);
+            existingArea.setAreaName(newAreaName);
+            return areaRepository.save(existingArea);
+        }
+        throw new IllegalArgumentException("Area not found");
+    }
+
+
+    @Override
+    public Area updateArea(Long areaId, Long newAreaCode) {
+        Optional<Area> optionalArea = areaRepository.findById(areaId);
+        if (optionalArea.isPresent()) {
+            Area existingArea = optionalArea.get();
+            existingArea.setAreaCode(newAreaCode);
             return areaRepository.save(existingArea);
         }
         throw new IllegalArgumentException("Area not found");
     }
 
     @Override
-    public void archiveArea(Area area) {
-        Optional<Area> optionalArea = areaRepository.findById(area.getId());
+    public void archiveArea(Long areaId) {
+        Optional<Area> optionalArea = areaRepository.findById(areaId);
         if (optionalArea.isPresent()) {
             Area existingArea = optionalArea.get();
             existingArea.setArchive(true);

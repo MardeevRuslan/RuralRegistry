@@ -1,0 +1,19 @@
+
+curl -X POST -H "Content-Type: application/json" -d '{"areaName": "A", "areaCode": 12345}' http://localhost:8080/api/areas/add
+curl -X POST -H "Content-Type: application/json" -d '{"areaName": "B", "areaCode": 2345}' http://localhost:8080/api/areas/add
+curl -X POST -H "Content-Type: application/json" -d '{"areaName": "C", "areaCode": 345}' http://localhost:8080/api/areas/add
+
+
+curl -X GET http://localhost:8080/api/areas/all
+
+curl -X GET 'http://localhost:8080/api/areas/searchByNameAndCode?name=A&code=12345'
+
+curl -X GET 'http://localhost:8080/api/areas/searchByName?name=A'
+
+curl -X GET 'http://localhost:8080/api/areas/searchByCode?code=12345'
+
+curl -X PUT -H "Content-Type: application/json" -d 'D' http://localhost:8080/api/areas/1/updateName
+
+curl -X PUT -H "Content-Type: application/json" -d '453' http://localhost:8080/api/areas/1/updateCode
+
+curl -X PUT http://localhost:8080/api/areas/1/archive

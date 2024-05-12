@@ -15,7 +15,9 @@ public interface AreaService {
 
     List<Area> getAreas(Long code);
 
-    Area updateArea(String areaName, long areaCode, Area area);
+    Area updateArea(Long areaId, String newAreaName);
 
-    void archiveArea(Area area);
+    Area updateArea(Long areaId, Long newAreaCode);
+
+    void archiveArea(Long areaId);
 }
